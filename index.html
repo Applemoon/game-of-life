@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Game of life</title>
+		<script src="source/Game.js"></script>
+
+		<link rel="stylesheet" href="./index.css">
+
+	</head>
+	<body>
+		<aside>
+			<button onclick="_start_game()">Start game</button>
+			<button onclick="_pause_game()">Pause game</button>
+			<button onclick="_make_one_step()">Make one step</button>
+			<button disabled class = "fps" onclick="game.setFPS(60)">60 fps</button> 
+			<button disabled class = "fps" onclick="game.setFPS(120)">120 fps</button> 
+			<button disabled class = "fps" onclick="game.setFPS(360)">360 fps</button>
+		</aside>
+
+		<script>
+
+		(function(global) {
+
+			let fps_buttons = [].slice.call(document.querySelectorAll('.fps'));
+
+			_start_game = function() {
+
+				if (typeof game !== 'undefined') {
+					game.stop();
+				}
+
+
+				game = new Game();
+				game.start();
+				game.update();
+				game.render();
+
+
+				let canvas = document.querySelector('canvas');
+
+				fps_buttons.forEach(function(button) {
+					button.removeAttribute('disabled');
+				});
+
+			};
+
+			_start_game_manual = function() {
+
+				if (typeof game !== 'undefined') {
+					game.stop();
+				}
+
+
+				game = new Game();
+				game.planes.push(new Plane());
+				game.start();
+				game.update();
+				game.render();
+
+
+				let canvas = document.querySelector('canvas');
+				canvas.addEventListener('click', manual_control, true);
+
+				autopilot_buttons.forEach(function(button) {
+					button.setAttribute('disabled', 'true');
+				});
+
+			};
+
+		})(this);
+		</script>
+	</body>
+</html> 
