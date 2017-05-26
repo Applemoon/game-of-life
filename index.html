@@ -8,11 +8,11 @@
 
 	</head>
 	<body onload="_start_game()">
-		<button onclick="game.makeOneStep();">Make one step</button>
-		<button onclick="game.pause();">Pause</button>
-		<button onclick="game.run();">Run</button>
+		<button onclick="game.run();" id="run">Run</button>
+		<button onclick="game.makeOneStep(true);" id="step">Make one step</button>
+		<button onclick="game.pause();" id="pause">Pause</button>
 
-		<div id="container" style="position: relative;"></div>
+		<div id="container" style="position: relative; margin-top: 10px"></div>
 
 		<script>
 

@@ -11,13 +11,19 @@
 	const Game = function() {
 		this.fps = 60;
 		this._has_ended  = false;
-		this.rows = 20;
-		this.columns = 40;
-		this.cellSize = 20;
+		this.rows = 60;
+		this.columns = 80;
+		this.cellSize = 10;
 		this.field = [];
 		this.nextField = [];
 		this.fps = 10;
 		this.isPaused = false;
+		this.container = document.getElementById("container");
+		
+		this.stepBtn = document.getElementById("step");
+		this.pauseBtn = document.getElementById("pause");
+		this.runBtn = document.getElementById("run");
+		this.updateBtns();
 	}
 
 	Game.prototype = {
@@ -27,7 +33,7 @@
 			for (var row = 0; row < this.rows; row++) {
 				this.field[row] = [];
 				for (var column = 0; column < this.columns; column++) {
-	      			this.field[row][column] = 0;
+	      			this.field[row][column] = Math.random() < 0.5 ? 0 : 1;
 	  			}
 	  			this.nextField[row] = this.field.slice();
 			}
@@ -43,15 +49,9 @@
 		},
 
 		render: function() {
-			var container = document.getElementById("container");
-			container.innerHTML = '';
-
-// 			Option 2 (much faster):
-
-// var myNode = document.getElementById("foo");
-// while (myNode.firstChild) {
-//     myNode.removeChild(myNode.firstChild);
-// }
+			while (this.container.firstChild) {
+			    this.container.removeChild(this.container.firstChild);
+			}
 
 			for (var row = 0; row < this.rows; row++) {
 				for (var column = 0; column < this.columns; column++) {
@@ -116,8 +116,8 @@
 			}
 		},
 
-		makeOneStep: function() {
-			if (this.isPaused) {
+		makeOneStep: function(force) {
+			if (!force && this.isPaused) {
 				return;
 			}
 
@@ -137,10 +137,24 @@
 
 		pause: function() {
 			this.isPaused = true;
+			this.updateBtns();
 		},
 
 		run: function() {
 			this.isPaused = false;
+			this.updateBtns();
+		},
+
+		updateBtns: function() {
+			if (this.isPaused) {
+				this.stepBtn.removeAttribute('disabled');
+				this.runBtn.removeAttribute('disabled');
+				this.pauseBtn.setAttribute('disabled', 'true');
+			} else {
+				this.stepBtn.setAttribute('disabled', 'true');
+				this.runBtn.setAttribute('disabled', 'true');
+				this.pauseBtn.removeAttribute('disabled');
+			}
 		},
 	};
 
