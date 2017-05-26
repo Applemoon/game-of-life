@@ -86,19 +86,11 @@ Game.prototype = {
 		if (this.field[row][column] == 0) {
 			if (neibCount == 3) {
 				this.updatingArray.push([row, column]);
-				console.log(row, column);
-				return 1;
 			}
-
-			return 0;
 		} else {
 			if (neibCount != 3 && neibCount != 2) {
 				this.updatingArray.push([row, column]);
-				console.log(row, column);
-				return 0;
 			}
-			
-			return 1;
 		}
 	},
 
