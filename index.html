@@ -3,27 +3,22 @@
 	<head>
 		<title>Game of life</title>
 		<script src="source/Game.js"></script>
-
 		<link rel="stylesheet" href="./index.css">
-
 	</head>
-	<body onload="_start_game()">
+	<body onload="_start_game()" style="background-color: black">
 		<button onclick="game.run();" id="run">Run</button>
 		<button onclick="game.makeOneStep(true);" id="step">Make one step</button>
 		<button onclick="game.pause();" id="pause">Pause</button>
+		<button onclick="location.reload();">Replay</button>
 
 		<div id="container" style="position: relative; margin-top: 10px"></div>
 
 		<script>
-
-		(function(global) {
 			_start_game = function() {
 				game = new Game();
 				game.start();
 				game.render();
 			};
-
-		})(this);
 		</script>
 	</body>
 </html> 
