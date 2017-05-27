@@ -1,14 +1,19 @@
 const Game = function() {
 	this.fps = 160;
-	this.rows = 100;
-	this.columns = 100;
-	this.cellSize = 5;
+	this.rows = 200;
+	this.columns = 200;
+	this.cellSize = 2;
 	this.borderSize = 0;
 	this.field = [];
 	this.updatingArray = [];
 	this.fps = 10;
 	this.isPaused = false;
-	this.container = document.getElementById("container");
+	this.initialEmptyPart = 0.1;
+	this.initialDensity = 0.1;
+	this.canvas = document.getElementById("canvas");
+	this.canvas.height = this.rows * (this.cellSize + this.borderSize);
+	this.canvas.width = this.columns * (this.cellSize + this.borderSize);
+	this.ctx = this.canvas.getContext('2d');
 	
 	this.stepBtn = document.getElementById("step");
 	this.pauseBtn = document.getElementById("pause");
@@ -19,25 +24,18 @@ const Game = function() {
 Game.prototype = {
 	start: function() {
 		this.field = [];
+		this.isPaused = false;
 		for (var row = 0; row < this.rows; row++) {
 			this.field[row] = [];
 			for (var column = 0; column < this.columns; column++) {
-				if (row > this.rows * 0.3 && row < this.rows * 0.7 && 
-					column > this.columns * 0.3 && column < this.columns * 0.7) {
-      				this.field[row][column] = Math.random() < 0.5 ? 0 : 1;
+				if (row > this.rows * this.initialEmptyPart && 
+					row < this.rows * (1 - this.initialEmptyPart) && 
+					column > this.columns * this.initialEmptyPart && 
+					column < this.columns * (1 - this.initialEmptyPart)) {
+      				this.field[row][column] = Math.random() > this.initialDensity ? 0 : 1;
       			} else {
       				this.field[row][column] = 0;
       			}
-
-				var newCell = document.createElement('div');
-				newCell.id = row + "-" + column;
-				newCell.style.top = (this.cellSize + this.borderSize) * row + 'px';
-				newCell.style.left = (this.cellSize + this.borderSize) * column + 'px';
-				newCell.style.position = 'absolute';
-				newCell.style.width = this.cellSize + 'px';
-				newCell.style.height = this.cellSize + 'px';
-
-				container.appendChild(newCell);
   			}
 		}
 
@@ -47,13 +45,14 @@ Game.prototype = {
 	render: function() {
 		for (var row = 0; row < this.rows; row++) {
 			for (var column = 0; column < this.columns; column++) {
-				var curId = row + "-" + column;
-				var curCell = document.getElementById(curId);
 				if (this.field[row][column] == 0) {
-					curCell.style.backgroundColor = 'lightgrey';
+					this.ctx.fillStyle = 'lightgrey';
 				} else {
-					curCell.style.backgroundColor = 'green';
+					this.ctx.fillStyle = 'green';
 				}
+				var x = column * (this.cellSize + this.borderSize);
+				var y = row * (this.cellSize + this.borderSize);
+				this.ctx.fillRect(x, y, this.cellSize, this.cellSize);
 			}
 		}
 	},
@@ -142,5 +141,7 @@ Game.prototype = {
 	},
 };
 
+// оптимизация отрисовки (только обновления)
 // вывод времени
 // вывод популяции
+// вынос стилей в index.css и переменных в начало Game.js
