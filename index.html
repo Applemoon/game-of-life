@@ -2,26 +2,19 @@
 <html>
 	<head>
 		<title>Game of life</title>
-		<script src="Game.js"></script>
 		<link rel="stylesheet" href="index.css">
 	</head>
-	<body onload="_start_game()" style="background-color: black">
-		<button onclick="game.run();" id="run">Run</button>
-		<button onclick="game.makeOneStep(true);" id="step">Make one step</button>
-		<button onclick="game.pause();" id="pause">Pause</button>
+	<body onload="start()" style="background-color: black">
+		<button onclick="run();" id="run">Run</button>
+		<button onclick="makeOneStep(true);" id="step">Make one step</button>
+		<button onclick="pause();" id="pause">Pause</button>
 		<button onclick="location.reload();">Replay</button>
 
 		<div>
 			<canvas id="canvas" height="200" width="200" style="position: relative;"></canvas>
 		</div>	
 
-		<script>
-			_start_game = function() {
-				game = new Game();
-				game.start();
-				game.render();
-			};
-		</script>
+		<script src="Game.js"></script>
 	</body>
 </html> 
 
