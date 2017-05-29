@@ -5,14 +5,17 @@
 		<link rel="stylesheet" href="index.css">
 	</head>
 	<body onload="start()" style="background-color: black">
-		<button onclick="run();" id="run">Run</button>
-		<button onclick="makeOneStep(true);" id="step">Make one step</button>
-		<button onclick="pause();" id="pause">Pause</button>
-		<button onclick="location.reload();">Replay</button>
+		<div id="buttons">
+			<button onclick="run();" id="run">Run</button>
+			<button onclick="makeOneStep(true);" id="step">Make one step</button>
+			<button onclick="pause();" id="pause">Pause</button>
+			<button onclick="location.reload();">Replay</button>
+			<button onclick="clearField();">Clear</button>
+			<span id="population">Population: -</span>
+			<span id="iteration">Time: -</span>
+		</div>
 
-		<div>
-			<canvas id="canvas" height="200" width="200" style="position: relative;"></canvas>
-		</div>	
+		<canvas id="canvas" height="200" width="200" style="position: relative;"></canvas>
 
 		<script src="Game.js"></script>
 	</body>

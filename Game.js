@@ -7,7 +7,7 @@ field = [];
 updatingArray = [];
 fps = 10;
 isPaused = false;
-initialEmptyPart = 0.4;
+initialEmptyPart = 0.3;
 initialDensity = 0.1;
 cellColor = "white";
 emptyCellColor = "darkslategray";
@@ -27,6 +27,13 @@ pauseBtn = document.getElementById("pause");
 runBtn = document.getElementById("run");
 updateBtns();
 
+population = 0;
+populationLabel = document.getElementById("population");
+
+iterationLabel = document.getElementById("iteration");
+iteration = 0;
+
+
 function start() {
 	field = [];
 	isPaused = false;
@@ -38,14 +45,20 @@ function start() {
 				column > columns * initialEmptyPart && 
 				column < columns * (1 - initialEmptyPart)) {
   				field[row][column] = Math.random() > initialDensity ? 0 : 1;
+  				if (field[row][column] == 1) {
+  					population += 1;
+  				} 
   			} else {
   				field[row][column] = 0;
   			}
   			renderCell(row, column);
-			}
+		}
 	}
 
 	timer = setInterval(makeOneStep.bind(this), 1000 / fps);
+
+	iteration = 0;
+	updateIteration();
 };
 
 function renderCell(row, column) {
@@ -88,10 +101,12 @@ function updateCell(row, column) {
 	if (field[row][column] == 0) {
 		if (neibCount == 3) {
 			updatingArray.push([row, column]);
+			population += 1;
 		}
 	} else {
 		if (neibCount != 3 && neibCount != 2) {
 			updatingArray.push([row, column]);
+			population -= 1;
 		}
 	}
 };
@@ -118,6 +133,11 @@ function makeOneStep(force) {
 		}
 		renderCell(row, column);
 	}
+
+	updatePopulation();
+
+	iteration += 1;
+	updateIteration();
 };
 
 function pause() {
@@ -151,13 +171,36 @@ function cellClick(event) {
 
 	if (field[row][column] == 1) {
 		field[row][column] = 0;
+		population -= 1;
 	} else {
 		field[row][column] = 1;
+		population += 1;
 	}
 	renderCell(row, column);
-}
+
+	updatePopulation();
+};
+
+function clearField() {
+	for (var row = 0; row < rows; row++) {
+		field[row] = [];
+		for (var column = 0; column < columns; column++) {
+			field[row][column] = 0;
+			renderCell(row, column);
+		}
+	}
+	population = 0;
+	updatePopulation();
+};
+
+function updatePopulation() {
+	populationLabel.innerHTML = "Population: " + population;
+};
+
+function updateIteration() {
+	iterationLabel.innerHTML = "Time: " + iteration;
+};
 
 
-// вывод времени
-// вывод популяции
-// вынос стилей в index.css и переменных в начало Game.js
+// красивые кнопки
+// отмотка на несколько ходов
