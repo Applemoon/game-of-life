@@ -4,7 +4,7 @@ cellSize = 6;
 borderSize = 0;
 fps = 500;
 field = [];
-updatingArray = [];
+updatingArrays = [];
 fps = 10;
 isPaused = false;
 initialEmptyPart = 0.3;
@@ -17,21 +17,18 @@ canvas.height = rows * cellSize;
 canvas.width = columns * cellSize;
 ctx = canvas.getContext('2d');
 
-canvasLeft = canvas.offsetLeft;
-canvasTop = canvas.offsetTop;
-
 canvas.addEventListener("click", cellClick, false);
 
 stepBtn = document.getElementById("step");
+stepBackBtn = document.getElementById("stepBack");
 pauseBtn = document.getElementById("pause");
 runBtn = document.getElementById("run");
-updateBtns();
 
 population = 0;
 populationLabel = document.getElementById("population");
 
-iterationLabel = document.getElementById("iteration");
 iteration = 0;
+iterationLabel = document.getElementById("iteration");
 
 
 function start() {
@@ -73,7 +70,7 @@ function renderCell(row, column) {
 		cellSize - borderSize, cellSize - borderSize);
 };
 
-function updateCell(row, column) {
+function calcCell(row, column) {
 	var topRow = row - 1;
 	if (topRow < 0) {
 		topRow = rows - 1;
@@ -100,13 +97,11 @@ function updateCell(row, column) {
 
 	if (field[row][column] == 0) {
 		if (neibCount == 3) {
-			updatingArray.push([row, column]);
-			population += 1;
+			updatingArrays[updatingArrays.length - 1].push([row, column]);
 		}
 	} else {
 		if (neibCount != 3 && neibCount != 2) {
-			updatingArray.push([row, column]);
-			population -= 1;
+			updatingArrays[updatingArrays.length - 1].push([row, column]);
 		}
 	}
 };
@@ -116,20 +111,23 @@ function makeOneStep(force) {
 		return;
 	}
 
+	updatingArrays.push([]);
 	for (var row = 0; row < rows; row++) {
 		for (var column = 0; column < columns; column++) {
-			updateCell(row, column);
+			calcCell(row, column);
 		}
 	}
 
-	while (updatingArray.length > 0) {
-		var rcArr = updatingArray.pop();
-		var row = rcArr[0];
-		var column = rcArr[1];
+	for (var i = 0; i < updatingArrays[updatingArrays.length - 1].length; i++) {
+		var rowColumnArray = updatingArrays[updatingArrays.length - 1][i];
+		var row = rowColumnArray[0];
+		var column = rowColumnArray[1];
 		if (field[row][column] == 1) {
 			field[row][column] = 0;
+			population -= 1;
 		} else {
 			field[row][column] = 1;
+			population += 1;
 		}
 		renderCell(row, column);
 	}
@@ -138,7 +136,36 @@ function makeOneStep(force) {
 
 	iteration += 1;
 	updateIteration();
+	updateBtns();
 };
+
+function stepBack() {
+	if (updatingArrays.length == 0) {
+		return;
+	}
+
+	var lastUpdatingArray = updatingArrays.pop();
+
+	for (var i = 0; i < lastUpdatingArray.length; i++) {
+		var rowColumnArray = lastUpdatingArray[i];
+		var row = rowColumnArray[0];
+		var column = rowColumnArray[1];
+		if (field[row][column] == 1) {
+			field[row][column] = 0;
+			population -= 1;
+		} else {
+			field[row][column] = 1;
+			population += 1;
+		}
+		renderCell(row, column);
+	}
+
+	updatePopulation();
+
+	iteration -= 1;
+	updateIteration();
+	updateBtns();
+}
 
 function pause() {
 	isPaused = true;
@@ -152,19 +179,25 @@ function run() {
 
 function updateBtns() {
 	if (isPaused) {
-		stepBtn.removeAttribute('disabled');
 		runBtn.removeAttribute('disabled');
 		pauseBtn.setAttribute('disabled', 'true');
+		stepBtn.removeAttribute('disabled');
 	} else {
-		stepBtn.setAttribute('disabled', 'true');
 		runBtn.setAttribute('disabled', 'true');
 		pauseBtn.removeAttribute('disabled');
+		stepBtn.setAttribute('disabled', 'true');
+	}
+
+	if (updatingArrays.length == 0 || !isPaused) {
+		stepBackBtn.setAttribute('disabled', 'true');
+	} else {
+		stepBackBtn.removeAttribute('disabled');
 	}
 };
 
 function cellClick(event) {
-	var x = event.pageX - canvasLeft;
-	var y = event.pageY - canvasTop;
+	var x = event.pageX - canvas.offsetLeft;
+	var y = event.pageY - canvas.offsetTop;
 
 	var column = (x - x % cellSize) / cellSize;
 	var row = (y - y % cellSize) / cellSize;
@@ -177,6 +210,7 @@ function cellClick(event) {
 		population += 1;
 	}
 	renderCell(row, column);
+	updatingArrays[updatingArrays.length - 1].push([row, column]);
 
 	updatePopulation();
 };
@@ -202,4 +236,4 @@ function updateIteration() {
 };
 
 
-// отмотка на несколько ходов
+// объединить Run и Pause
