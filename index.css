@@ -26,8 +26,10 @@ button {
     border: none;
     font-size: 16px;
     cursor: pointer;
+    outline: 0;
 }
 
 button:disabled {
     opacity: 0.6;
+    cursor: default;
 }
