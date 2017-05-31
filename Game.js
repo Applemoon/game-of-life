@@ -7,8 +7,8 @@ field = [];
 updatingArrays = [];
 fps = 10;
 isPaused = false;
-initialEmptyPart = 0.3;
-initialDensity = 0.1;
+initialEmptyPart = 0;
+initialDensity = 0.5;
 cellColor = "white";
 emptyCellColor = "darkslategray";
 
@@ -17,12 +17,26 @@ canvas.height = rows * cellSize;
 canvas.width = columns * cellSize;
 ctx = canvas.getContext('2d');
 
-canvas.addEventListener("click", cellClick, false);
+canvas.addEventListener("click", cellClick);
+
+runPauseBtn = document.getElementById("run-pause");
+runPauseBtn.addEventListener("click", togglePause, false);
 
 stepBtn = document.getElementById("step");
+stepBtn.addEventListener("click", function() {
+	makeOneStep(true);
+}, false);
+
 stepBackBtn = document.getElementById("stepBack");
-pauseBtn = document.getElementById("pause");
-runBtn = document.getElementById("run");
+stepBackBtn.addEventListener("click", stepBack, false);
+
+reloadBtn = document.getElementById("reload");
+reloadBtn.addEventListener("click", function() { 
+	location.reload(); 
+}, false);
+
+clearBtn = document.getElementById("clear");
+clearBtn.addEventListener("click", clearField, false);
 
 population = 0;
 populationLabel = document.getElementById("population");
@@ -165,27 +179,16 @@ function stepBack() {
 	iteration -= 1;
 	updateIteration();
 	updateBtns();
-}
-
-function pause() {
-	isPaused = true;
-	updateBtns();
-};
-
-function run() {
-	isPaused = false;
-	updateBtns();
 };
 
 function updateBtns() {
 	if (isPaused) {
-		runBtn.removeAttribute('disabled');
-		pauseBtn.setAttribute('disabled', 'true');
 		stepBtn.removeAttribute('disabled');
+		runPauseBtn.innerHTML = "&#9658; Run";
 	} else {
-		runBtn.setAttribute('disabled', 'true');
-		pauseBtn.removeAttribute('disabled');
 		stepBtn.setAttribute('disabled', 'true');
+		// runPauseBtn.innerHTML = "Pause";
+		runPauseBtn.innerHTML = "&#10073;&#10073; Pause";
 	}
 
 	if (updatingArrays.length == 0 || !isPaused) {
@@ -235,5 +238,12 @@ function updateIteration() {
 	iterationLabel.innerHTML = "Time: " + iteration;
 };
 
+function togglePause() {
+	isPaused = !isPaused;
+	updateBtns();
+};
 
-// объединить Run и Pause
+
+// нетронутые клетки
+// еще украшательства кнопок (стили)
+// развернуть на сервере

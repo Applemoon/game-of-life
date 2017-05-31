@@ -6,14 +6,16 @@
 	</head>
 	<body onload="updateBtns(); start();" style="background-color: black">
 		<div id="buttons">
-			<button onclick="run();" id="run">&#9658; Run</button>
-			<button onclick="pause();" id="pause">&#10073;&#10073; Pause</button>
-			<button onclick="stepBack();" id="stepBack">&#9194; Step back</button>
-			<button onclick="makeOneStep(true);" id="step">&#9193; Step</button>
-			<button onclick="location.reload();">&#8635; Replay</button>
-			<button onclick="clearField();">&#9724; Clear</button>
+			<button id="run-pause">&#9658; Run / Pause &#10073;&#10073;</button>
+			<button id="stepBack">&#9194; Step back</button>
+			<button id="step">&#9193; Step</button>
+			<button id="reload">&#8635; Replay</button>
+			<button id="clear">&#9724; Clear</button>
+			<span>
 			<span id="population">Population: -</span>
+			<br>
 			<span id="iteration">Time: -</span>
+			</span>
 		</div>
 
 		<canvas id="canvas" height="200" width="200" style="position: relative;"></canvas>
