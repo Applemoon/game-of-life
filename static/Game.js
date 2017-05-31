@@ -8,9 +8,11 @@ updatingArrays = [];
 fps = 10;
 isPaused = false;
 initialEmptyPart = 0;
-initialDensity = 0.5;
+initialDensity = 0.1;
+initialEmptyCellColor = "#223a3a";
 cellColor = "white";
 emptyCellColor = "darkslategray";
+firstRender = true;
 
 canvas = document.getElementById("canvas");
 canvas.height = rows * cellSize;
@@ -70,11 +72,16 @@ function start() {
 
 	iteration = 0;
 	updateIteration();
+	firstRender = false;
 };
 
 function renderCell(row, column) {
 	if (field[row][column] == 0) {
-		ctx.fillStyle = emptyCellColor;
+		if (firstRender) {
+			ctx.fillStyle = initialEmptyCellColor;
+		} else {
+			ctx.fillStyle = emptyCellColor;
+		}
 	} else {
 		ctx.fillStyle = cellColor;
 	}
@@ -244,6 +251,5 @@ function togglePause() {
 };
 
 
-// нетронутые клетки
 // еще украшательства кнопок (стили)
 // развернуть на сервере
