@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Game of life</title>
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body onload="updateBtns(); start();" style="background-color: black">
+		<div id="buttons">
+			<button id="run-pause">&#9658; Run / Pause &#10073;&#10073;</button>
+			<button id="stepBack">&#9194; Step back</button>
+			<button id="step">&#9193; Step</button>
+			<button id="reload">&#8635; Replay</button>
+			<button id="clear">&#9724; Clear</button>
+			<span>
+			<span id="population">Population: -</span>
+			<br>
+			<span id="iteration">Time: -</span>
+			</span>
+		</div>
+
+		<canvas id="canvas" height="200" width="200" style="position: relative;"></canvas>
+
+		<script src="Game.js"></script>
+	</body>
+</html> 
+
